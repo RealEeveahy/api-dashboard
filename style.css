@@ -1,0 +1,25 @@
+.content-container {
+    border-style:solid;
+    display: inline-block;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    padding: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 32px;
+}
+
+h2 {
+    text-align: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 12px;
+}
+
+.card-image {
+    height: 200px;
+    justify-self: center;
+}
+
