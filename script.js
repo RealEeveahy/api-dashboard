@@ -1,3 +1,5 @@
+import { GitActionWidget, ArtistWidget } from './widgets.js';
+
 const dom = {
     github : {
         name : document.getElementById("GitName"),
@@ -19,18 +21,40 @@ const dom = {
     }
 }
 
-class GitActionWidget {
-    constructor(action, repoName, date) {
-        // this.action = action;
-        // this.repoName = repoName;
-        // this.date = date;
+async function fetchArtists() {
+    const mb_root = "https://musicbrainz.org/ws/2/";
+    const args = "?inc=aliases&fmt=json";
 
-        const gitDiv = document.getElementById("GitActivity");
-        const newAction = document.createElement("p");
-        newAction.textContent = action.slice(0,-5) + " in '" + repoName + "' on " + date.slice(0,10);
+    const artistURLs = [
+        "artist/f4b6e451-5dce-4842-a555-f793892299b3", //Jane Remover
+        "artist/6d8165b1-3ac3-402f-9c46-72451a4154f9", //SBC
+        "artist/a3c33579-c9ba-4ef4-b852-b33f15bb4045" //gfx3c
+    ]
 
-        gitDiv.appendChild(newAction);
+    for (const a_url of artistURLs)
+    {
+        await loadArtist(mb_root + a_url + args);
+        await sleep(1200);
     }
+}
+
+async function loadArtist(url) {
+    let a_info = await fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        new ArtistWidget(
+            "MusicContainer",
+            data.name,
+            data.area.name,
+            "NONE YET"
+        )
+    })
+    .catch(error => console.error('Error: ', error));
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function getFormatDate(dateObj){
@@ -57,6 +81,7 @@ async function getGitInfo(){
         for(let i = 0; i < 5; i++)
         {
             new GitActionWidget(
+                "GitActivity",
                 data[i].type,
                 data[i].repo.name, 
                 data[i].created_at
@@ -81,7 +106,7 @@ async function getWeatherInfo() {
     .then(data => {
         let today = new Date();
 
-        dom.weather.current.innerHTML =  getFormatDate(today) +": "+ data.temperature.slice(1);
+        dom.weather.current.innerHTML =  getFormatDate(today) +": "+ data.temperature;
         dom.weather.day2.innerHTML = getFormatDate(new Date(today.getTime() + 24 * 60 * 60 * 1000)) +": "+ data.forecast[0].temperature.slice(1);
         dom.weather.day3.innerHTML = getFormatDate(new Date(today.getTime() + 48 * 60 * 60 * 1000)) +": "+ data.forecast[1].temperature.slice(1);
     })
@@ -89,8 +114,11 @@ async function getWeatherInfo() {
 }
 
 async function fetchCat() {
+    // request
     const newCat = await fetch('https://cataas.com/cat');
+    // store the request as a blob (binary data)
     const blob = await newCat.blob();
+    // get a url from the blob, since the image is at the url itself
     return URL.createObjectURL(blob);
 }
 
@@ -99,9 +127,13 @@ async function setCat() {
     console.log("got a new cat");
 }
 
-setCat();
-getGitInfo();
-getPokemonInfo();
-getWeatherInfo();
+document.addEventListener("DOMContentLoaded", () => {
+    setCat();
+    getGitInfo();
+    getPokemonInfo();
+    getWeatherInfo();
 
-dom.cat.btn.addEventListener("click", setCat)
+    fetchArtists();
+
+    dom.cat.btn.addEventListener("click", setCat);
+});

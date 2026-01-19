@@ -2,11 +2,14 @@
 <html>
     <head>
         <link rel="stylesheet" href="style.css">
+        <meta charset="UTF-8">
+        <title>Mae's Dashboard</title>
     </head>
     <body>
         <h1>Mae's Dashboard</h1>
         <h2>A collection of fetched data gathered while I learn JavaScript + Web APIs</h2>
 
+        <!--GitHub-->
         <a href="https://github.com/RealEeveahy">
             <div class="content-container">
                 <h2>My GitHub!</h2>
@@ -24,6 +27,7 @@
             </div>
         </a>
 
+        <!--Pokemon-->
         <div class="content-container">
             <h2>My Favourite Pokemon!</h2>
             <img id="PkmnImage" alt="image not loaded" class="card-image">
@@ -31,22 +35,31 @@
         </div>
 
         <!--Music, one tab for my favourite artists, current favourite songs, recent music by my favs -->
+        <div class="content-container">
+            <h2>My Favourite Artists</h2>
+            <div id="MusicContainer" style="overflow-y: scroll; max-height: 300px; min-height: 100px; min-width: 300px;">
+
+            </div>
+        </div>
 
         <!--Random Cat-->
         <div class="content-container">
             <h2>Random Cat</h2>
             <img id="RandomCat" alt="Couldn't find any cats!" class="card-image">
+        </br>
             <button id="CatButton">Generate Another!</button>
         </div>
 
         <!--Yanchep Line status-->
 
+        <!--Perth Weather Forecast-->
         <div class="content-container">
             <h2>Perth Weather</h2>
             <h2 id="weatherCurrent">-- C</h2>
             <h2 id="weatherDay2">-- C</h2>
             <h2 id="weatherDay3">-- C</h2>
         </div>
-        <script src="script.js"></script>
+
+        <script type="module" src="script.js"></script>
     </body>
 </html>

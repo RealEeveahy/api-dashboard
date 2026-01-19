@@ -1,8 +1,20 @@
+.collection {
+    vertical-align: top;
+}
+
 .content-container {
     border-style:solid;
     display: inline-block;
     border-radius: 20px;
     padding: 20px;
+    vertical-align: top;
+}
+
+.inner-content {
+    border-style:solid;
+    border-color: lightgray;
+    border-radius: 15px;
+    padding: 4px;
 }
 
 h1 {
@@ -28,3 +40,6 @@ p {
     justify-self: center;
 }
 
+a {
+    text-decoration: none;
+}
