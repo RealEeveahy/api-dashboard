@@ -10,9 +10,17 @@
         <a href="https://github.com/RealEeveahy">
             <div class="content-container">
                 <h2>My GitHub!</h2>
-                <img id="GitImage" alt="GitHub image couldn't load!" class="card-image">
-                <h2 id="GitName">git name</h2>
-                <h2 id="GitJoin"></h2>
+                <div style="display: flex; justify-content: flex-start;">
+                    <img id="GitImage" alt="GitHub image couldn't load!" class="card-image">
+                    <span style="float: right; padding: 5px;">
+                        <h2 id="GitName">git name</h2>
+                        <h2 id="GitJoin"></h2>
+                    </span>
+                </div>
+                <h2>Recent Activity</h2>
+                <div id="GitActivity">
+
+                </div>
             </div>
         </a>
 
@@ -22,8 +30,22 @@
             <h2 id="PkmnName"></h2>
         </div>
 
+        <!--Music, one tab for my favourite artists, current favourite songs, recent music by my favs -->
+
+        <!--Random Cat-->
         <div class="content-container">
-            <h2 id="output">default</h2>
+            <h2>Random Cat</h2>
+            <img id="RandomCat" alt="Couldn't find any cats!" class="card-image">
+            <button id="CatButton">Generate Another!</button>
+        </div>
+
+        <!--Yanchep Line status-->
+
+        <div class="content-container">
+            <h2>Perth Weather</h2>
+            <h2 id="weatherCurrent">-- C</h2>
+            <h2 id="weatherDay2">-- C</h2>
+            <h2 id="weatherDay3">-- C</h2>
         </div>
         <script src="script.js"></script>
     </body>

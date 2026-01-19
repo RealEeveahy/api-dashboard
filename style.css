@@ -18,6 +18,11 @@ h2 {
     font-size: 12px;
 }
 
+p {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 12px;
+}
+
 .card-image {
     height: 200px;
     justify-self: center;
