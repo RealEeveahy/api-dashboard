@@ -3,17 +3,16 @@ export default class CardWidget {
         this.wrapper = document.createElement("div");
         this.wrapper.className = "inner-content";
 
-        document.getElementById(parent).appendChild(this.wrapper);
+        parent.appendChild(this.wrapper);
     } 
 }
 
 export class GitActionWidget extends CardWidget{ 
     constructor(parent, action, repoName, date) {
         super(parent);
-        const newAction = document.createElement("p");
-        newAction.textContent = action.slice(0,-5) + " in '" + repoName + "' on " + date.slice(0,10);
-
-        this.wrapper.appendChild(newAction);
+        this.description = document.createElement("p");
+        this.description.textContent = action.slice(0,-5) + " in '" + repoName + "' on " + date.slice(0,10);
+        this.wrapper.appendChild(this.description);
     }
 }
 
@@ -23,15 +22,16 @@ export class ArtistWidget extends CardWidget {
 
         const nameField = document.createElement("p");
         nameField.textContent = name;
+        this.wrapper.appendChild(nameField);
 
-        const locationField = document.createElement("p");
-        locationField.textContent = "🏳 " + location;
+        if(location !== "") {
+            const locationField = document.createElement("p");
+            locationField.textContent = "🏳 " + location;
+            this.wrapper.appendChild(locationField);
+        }
 
         const genreField = document.createElement("p");
         genreField.textContent = genres;
-
-        this.wrapper.appendChild(nameField);
-        this.wrapper.appendChild(locationField);
         this.wrapper.appendChild(genreField);
     }
 }

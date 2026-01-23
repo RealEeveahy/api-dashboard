@@ -1,11 +1,8 @@
 import { GitActionWidget, ArtistWidget } from './widgets.js';
+import * as utils from './helpers.js';
+import { GitController } from './controllers/git_controller.js';
 
 const dom = {
-    github : {
-        name : document.getElementById("GitName"),
-        img : document.getElementById("GitImage"),
-        joinDate : document.getElementById("GitJoin")
-    },
     pokemon : {
         name : document.getElementById("PkmnName"),
         img : document.getElementById("PkmnImage")
@@ -23,18 +20,24 @@ const dom = {
 
 async function fetchArtists() {
     const mb_root = "https://musicbrainz.org/ws/2/";
-    const args = "?inc=aliases&fmt=json";
+    const args = "?inc=aliases+genres&fmt=json";
 
     const artistURLs = [
         "artist/f4b6e451-5dce-4842-a555-f793892299b3", //Jane Remover
         "artist/6d8165b1-3ac3-402f-9c46-72451a4154f9", //SBC
-        "artist/a3c33579-c9ba-4ef4-b852-b33f15bb4045" //gfx3c
+        "artist/7f423ed9-a2d4-4a2b-8de7-c07180c7bc94", //tictacto
+        "artist/a3c33579-c9ba-4ef4-b852-b33f15bb4045", //gfx3c
+        "artist/81917661-c863-4887-a42a-ce569aa73069", //gingerbee
+        "artist/f3bc253c-9bb7-40b6-9057-5524d69b64ec", //kfc murder chicks
+        "artist/f7dfbb53-8e55-4eb7-a12b-76d452c89fb3", //diet tea other cola
+        "artist/1e79565e-60d5-498d-aa73-fa24d9065df1", //julie
+        "artist/f9133036-ab3d-4e97-bd11-7a2c98ad148a" //death grips
     ]
 
     for (const a_url of artistURLs)
     {
         await loadArtist(mb_root + a_url + args);
-        await sleep(1200);
+        await utils.sleep(1200);
     }
 }
 
@@ -43,51 +46,22 @@ async function loadArtist(url) {
     .then(response => response.json())
     .then(data => {
         console.log(data);
+
+        let genres = new Map();
+        (data.genres).forEach(element => {
+            genres.set(element.name, element.count);
+        });
+
+        let genreSummary = utils.getTopElements(genres,3);
+
         new ArtistWidget(
             "MusicContainer",
-            data.name,
-            data.area.name,
-            "NONE YET"
+            ((data.name ?? data?.["sort-name"]) ?? data.aliases[0].name ) ?? "Name error.",
+            data.area!=null ? data.area.name : "",
+            genreSummary
         )
     })
     .catch(error => console.error('Error: ', error));
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function getFormatDate(dateObj){
-    let day = dateObj.getDate();
-    let month = dateObj.getMonth() +1;
-    return day+"/"+month
-}
-
-async function getGitInfo(){
-    let gitProfile = await fetch("https://api.github.com/users/RealEeveahy")
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        dom.github.name.innerHTML = data.login;
-        dom.github.img.src = data.avatar_url;
-        dom.github.joinDate.innerHTML = "Member since: " + (data.created_at).slice(0,10);
-    })
-    .catch(error => console.error('Error: ', error));
-
-    let gitActivity = await fetch("https://api.github.com/users/RealEeveahy/events/public")
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        for(let i = 0; i < 5; i++)
-        {
-            new GitActionWidget(
-                "GitActivity",
-                data[i].type,
-                data[i].repo.name, 
-                data[i].created_at
-                );
-        }
-    })
 }
 
 async function getPokemonInfo(){
@@ -106,9 +80,9 @@ async function getWeatherInfo() {
     .then(data => {
         let today = new Date();
 
-        dom.weather.current.innerHTML =  getFormatDate(today) +": "+ data.temperature;
-        dom.weather.day2.innerHTML = getFormatDate(new Date(today.getTime() + 24 * 60 * 60 * 1000)) +": "+ data.forecast[0].temperature.slice(1);
-        dom.weather.day3.innerHTML = getFormatDate(new Date(today.getTime() + 48 * 60 * 60 * 1000)) +": "+ data.forecast[1].temperature.slice(1);
+        dom.weather.current.innerHTML =  utils.getFormatDate(today) +": "+ data.temperature;
+        dom.weather.day2.innerHTML = utils.getFormatDate(new Date(today.getTime() + 24 * 60 * 60 * 1000)) +": "+ data.forecast[0].temperature;
+        dom.weather.day3.innerHTML = utils.getFormatDate(new Date(today.getTime() + 48 * 60 * 60 * 1000)) +": "+ data.forecast[1].temperature;
     })
     .catch(error => console.error('Error: ', error));
 }
@@ -129,11 +103,17 @@ async function setCat() {
 
 document.addEventListener("DOMContentLoaded", () => {
     setCat();
-    getGitInfo();
+
+    const git = new GitController("body", "views/git_panel.html");
+    git.init();
+
     getPokemonInfo();
     getWeatherInfo();
 
-    fetchArtists();
+    //fetchArtists();
+
+    utils.loadPartial("body", "views/box.html", "box");
+    utils.loadPartial("body", "views/box.html", "box");
 
     dom.cat.btn.addEventListener("click", setCat);
 });
